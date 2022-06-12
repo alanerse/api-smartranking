@@ -1,47 +1,35 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
-import { Player } from './interfaces/player.interface';
+import { Player } from './entities/player.entity';
+import { IPlayerRepository } from './interfaces/player-repository.interface';
 
 @Injectable()
 export class PlayerService {
-  constructor(
-    @InjectModel('Player') private readonly playerModel: Model<Player>,
-  ) {}
+  constructor(@Inject() private readonly playerRepository: IPlayerRepository) {}
 
   async create(createPlayerDto: CreatePlayerDto): Promise<void> {
-    const { phoneNumber, email, name } = createPlayerDto;
-    try {
-      const newPlayer = await this.playerModel.create({
-        phoneNumber,
-        email,
-        name,
-      });
+    const { email, name, phoneNumber } = createPlayerDto;
 
-      if (!newPlayer._id) {
-        throw new Error('deu nao');
-      }
+    const newPlayer = Player.create({
+      email,
+      name,
+      phoneNumber,
+      ranking: '',
+      rankingPosition: 20,
+      urlPlayerPhoto: '',
+    });
 
-      return;
-    } catch (error) {
-      throw new Error(error);
-    }
+    await this.playerRepository.create(newPlayer);
   }
 
   async findAll(): Promise<Player[]> {
-    return await this.playerModel.find({});
+    return await this.playerRepository.findAll();
   }
 
   async findOne(email: string): Promise<Player> {
-    try {
-      const player = await this.playerModel.findOne({ email: email });
-      if (!player) throw new Error('sumiu');
-      return player;
-    } catch (error) {
-      throw new Error(error);
-    }
+    const player = await this.playerRepository.findOne(email);
+    return player;
   }
 
   async update(id: number, updatePlayerDto: UpdatePlayerDto): Promise<void> {
