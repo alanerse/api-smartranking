@@ -26,7 +26,7 @@ export class PlayerController {
     return this.playerService.findAll();
   }
 
-  @Get()
+  @Get(':email')
   async findOne(@Query('email') email: string) {
     return this.playerService.findOne(email);
   }
