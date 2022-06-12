@@ -13,7 +13,7 @@ export class PlayerService {
     return [];
   }
 
-  async findOne(id: number): Promise<Player> {
+  async findOne(email: string): Promise<Player> {
     return {} as Player;
   }
 

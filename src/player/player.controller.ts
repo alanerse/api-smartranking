@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { PlayerService } from './player.service';
 import { CreatePlayerDto } from './dto/create-player.dto';
@@ -25,9 +26,9 @@ export class PlayerController {
     return this.playerService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.playerService.findOne(+id);
+  @Get()
+  async findOne(@Query('email') email: string) {
+    return this.playerService.findOne(email);
   }
 
   @Patch(':id')
