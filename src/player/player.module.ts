@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PlayerService } from './player.service';
 import { PlayerController } from './player.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { PlayerSchema } from './interfaces/player.schema';
+import { PlayerSchema } from '../schemas/player.schema';
 
 @Module({
   imports: [

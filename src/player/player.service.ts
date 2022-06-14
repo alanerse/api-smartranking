@@ -1,12 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { Player } from './entities/player.entity';
-import { IPlayerRepository } from './interfaces/player-repository.interface';
 
 @Injectable()
 export class PlayerService {
-  constructor(@Inject() private readonly playerRepository: IPlayerRepository) {}
+  constructor(
+    @InjectModel('Player') private readonly playerModel: Model<Player>,
+  ) {}
 
   async create(createPlayerDto: CreatePlayerDto): Promise<void> {
     const { email, name, phoneNumber } = createPlayerDto;
@@ -20,15 +23,15 @@ export class PlayerService {
       urlPlayerPhoto: '',
     });
 
-    await this.playerRepository.create(newPlayer);
+    await this.playerModel.create(newPlayer);
   }
 
   async findAll(): Promise<Player[]> {
-    return await this.playerRepository.findAll();
+    return await this.playerModel.find({});
   }
 
   async findOne(email: string): Promise<Player> {
-    const player = await this.playerRepository.findOne(email);
+    const player = await this.playerModel.findOne({ email: email });
     return player;
   }
 
