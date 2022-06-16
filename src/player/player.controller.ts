@@ -6,17 +6,22 @@ import {
   Patch,
   Param,
   Delete,
+  UsePipes,
+  ValidationPipe,
   Query,
+  UseFilters,
 } from '@nestjs/common';
 import { PlayerService } from './player.service';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
+import { FindPlayerParamsValidation } from './pipes/find-player-params-validation.pipe';
 
 @Controller('player')
 export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
   @Post()
+  @UsePipes(ValidationPipe)
   async create(@Body() createPlayerDto: CreatePlayerDto) {
     return await this.playerService.create(createPlayerDto);
   }
@@ -26,21 +31,21 @@ export class PlayerController {
     return this.playerService.findAll();
   }
 
-  @Get(':email')
-  async findOne(@Query('email') email: string) {
+  @Get('/search')
+  async findOne(@Query('email', FindPlayerParamsValidation) email: string) {
     return this.playerService.findOne(email);
   }
 
-  @Patch(':id')
+  @Patch(':email')
   async update(
-    @Param('id') id: string,
+    @Param('email') email: string,
     @Body() updatePlayerDto: UpdatePlayerDto,
   ) {
-    return await this.playerService.update(+id, updatePlayerDto);
+    return await this.playerService.update(email, updatePlayerDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.playerService.remove(+id);
+  @Delete(':email')
+  async remove(@Param('email') email: string) {
+    return await this.playerService.remove(email);
   }
 }

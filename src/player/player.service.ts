@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreatePlayerDto } from './dto/create-player.dto';
@@ -23,7 +23,12 @@ export class PlayerService {
       urlPlayerPhoto: '',
     });
 
-    await this.playerModel.create(newPlayer);
+    try {
+      await this.playerModel.create(newPlayer);
+      return;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findAll(): Promise<Player[]> {
@@ -32,14 +37,28 @@ export class PlayerService {
 
   async findOne(email: string): Promise<Player> {
     const player = await this.playerModel.findOne({ email: email });
+    if (!player) throw new NotFoundException(`${email} not found`);
     return player;
   }
 
-  async update(id: number, updatePlayerDto: UpdatePlayerDto): Promise<void> {
+  async update(email: string, updatePlayerDto: UpdatePlayerDto): Promise<void> {
+    const player = await this.playerModel.findOne({ email: email });
+    if (!player) throw new NotFoundException(`${email} not found`);
+    await this.playerModel.updateOne(
+      { email: email },
+      {
+        name: updatePlayerDto.name,
+        phoneNumber: updatePlayerDto.phoneNumber,
+      },
+    );
+
     return;
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(email: string): Promise<void> {
+    const player = await this.playerModel.findOne({ email: email });
+    if (!player) throw new NotFoundException(`${email} not found`);
+    await this.playerModel.deleteOne({ email: email });
     return;
   }
 }
