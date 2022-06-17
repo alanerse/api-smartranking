@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreatePlayerDto } from './create-player.dto';
+import { CreatePlayerDTO } from './create-player.dto';
 
-export class UpdatePlayerDto extends PartialType(CreatePlayerDto) {}
+export class UpdatePlayerDTO extends PartialType(CreatePlayerDTO) {}

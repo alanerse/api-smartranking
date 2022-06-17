@@ -9,11 +9,10 @@ import {
   UsePipes,
   ValidationPipe,
   Query,
-  UseFilters,
 } from '@nestjs/common';
 import { PlayerService } from './player.service';
-import { CreatePlayerDto } from './dto/create-player.dto';
-import { UpdatePlayerDto } from './dto/update-player.dto';
+import { CreatePlayerDTO } from './dto/create-player.dto';
+import { UpdatePlayerDTO } from './dto/update-player.dto';
 import { FindPlayerParamsValidation } from './pipes/find-player-params-validation.pipe';
 
 @Controller('player')
@@ -22,7 +21,7 @@ export class PlayerController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  async create(@Body() createPlayerDto: CreatePlayerDto) {
+  async create(@Body() createPlayerDto: CreatePlayerDTO) {
     return await this.playerService.create(createPlayerDto);
   }
 
@@ -39,7 +38,7 @@ export class PlayerController {
   @Patch(':email')
   async update(
     @Param('email') email: string,
-    @Body() updatePlayerDto: UpdatePlayerDto,
+    @Body() updatePlayerDto: UpdatePlayerDTO,
   ) {
     return await this.playerService.update(email, updatePlayerDto);
   }

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PlayerModule } from './player/player.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { PlayerModule } from './player/player.module';
       dbName: 'smartranking',
     }),
     PlayerModule,
+    CategoryModule,
   ],
   controllers: [],
   providers: [],
