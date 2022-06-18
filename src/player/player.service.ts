@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePlayerDTO } from './dto/create-player.dto';
 import { UpdatePlayerDTO } from './dto/update-player.dto';
 import { Player } from './entities/player.entity';
@@ -16,6 +21,9 @@ export class PlayerService {
 
   async create(createPlayerDto: CreatePlayerDTO): Promise<void> {
     const { email, name, phoneNumber } = createPlayerDto;
+
+    const player = await this.playerRepository.findOne(email);
+    if (player) throw new BadRequestException(`${email} already exists`);
 
     const newPlayer = Player.create({
       email,

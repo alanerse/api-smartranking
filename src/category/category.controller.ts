@@ -31,21 +31,23 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id', ParamsValidation) id: string): Promise<Category> {
-    return this.categoryService.findOne(+id);
+  @Get(':name')
+  async findOne(
+    @Param('name', ParamsValidation) name: string,
+  ): Promise<Category> {
+    return this.categoryService.findOne(name);
   }
 
-  @Patch(':id')
+  @Patch(':name')
   async update(
-    @Param('id', ParamsValidation) id: string,
+    @Param('name', ParamsValidation) name: string,
     @Body() updateCategoryDto: UpdateCategoryDTO,
   ): Promise<void> {
-    return this.categoryService.update(+id, updateCategoryDto);
+    return this.categoryService.update(name, updateCategoryDto);
   }
 
-  @Delete(':id')
-  async remove(@Param('id', ParamsValidation) id: string): Promise<void> {
-    return this.categoryService.remove(+id);
+  @Delete(':name')
+  async remove(@Param('name', ParamsValidation) name: string): Promise<void> {
+    return this.categoryService.remove(name);
   }
 }

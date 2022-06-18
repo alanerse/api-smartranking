@@ -3,46 +3,32 @@ import { Player } from '../../player/entities/player.entity';
 export class Category {
   readonly name: string;
   description: string;
-  events: Array<Event>;
+  contests: Array<Contest>;
   players: Array<Player>;
 
   constructor(
     name: string,
     description: string,
-    events?: Array<Event>,
-    players?: Array<Player>,
+    contests: Array<Contest>,
+    players: Array<Player>,
   ) {
     this.name = name;
     this.description = description;
-    this.events = events;
+    this.contests = contests;
     this.players = players;
   }
 
   public static create(opts: Category) {
-    const { name, description, events, players } = opts;
+    const { name, description, contests, players } = opts;
 
     //Here we can do some valitadions before instantiate the obj;
 
-    return new Category(name, description, events, players);
+    return new Category(name, description, contests, players);
   }
 }
 
-export class Event {
+export interface Contest {
   name: string;
   operation: string;
   value: number;
-
-  constructor(name: string, operation: string, value: number) {
-    this.name = name;
-    this.operation = operation;
-    this.value = value;
-  }
-
-  public static create(opts: Event) {
-    const { name, operation, value } = opts;
-
-    //Here we can do some valitadions before instantiate the obj;
-
-    return new Event(name, operation, value);
-  }
 }

@@ -1,7 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Player } from '../player/entities/player.entity';
 import { CreateCategoryDTO } from './dto/create-category.dto';
 import { UpdateCategoryDTO } from './dto/update-category.dto';
-import { Category } from './entities/category.entity';
+import { Category, Contest } from './entities/category.entity';
 import {
   CategoryRepository,
   CATEGORY_REPOSITORY,
@@ -15,25 +21,75 @@ export class CategoryService {
   ) {}
 
   async create(createCategoryDTO: CreateCategoryDTO): Promise<void> {
+    const { name, description, contests } = createCategoryDTO;
+
+    const category = await this.categoryRepository.findOne(name);
+    if (category)
+      throw new BadRequestException(`${name} category already exists`);
+
+    const newCategory = Category.create({
+      name,
+      description,
+      contests,
+      players: [],
+    });
+
+    await this.categoryRepository.create(newCategory);
+
     return;
   }
 
   async findAll(): Promise<Category[]> {
-    return [];
+    return await this.categoryRepository.findAll();
   }
 
-  async findOne(id: number): Promise<Category> {
-    return {} as Category;
+  async findOne(name: string): Promise<Category> {
+    const category = await this.categoryRepository.findOne(name);
+    if (!category) throw new NotFoundException(`${name} category not found`);
+    return category;
   }
 
   async update(
-    id: number,
+    name: string,
     updateCategoryDto: UpdateCategoryDTO,
   ): Promise<void> {
+    const { description } = updateCategoryDto;
+    await this.categoryRepository.update(name, description);
     return;
   }
 
-  async remove(id: number): Promise<void> {
+  async addContest(name: string, contest: Contest): Promise<void> {
+    const category = await this.categoryRepository.findOne(name);
+    if (!category) throw new NotFoundException(`${name} category not found`);
+
+    category.contests.push(contest);
+
+    await this.categoryRepository.update(
+      name,
+      category.description,
+      category.contests,
+      category.players,
+    );
+    return;
+  }
+
+  async addPlayer(name: string, player: Player): Promise<void> {
+    const category = await this.categoryRepository.findOne(name);
+    if (!category) throw new NotFoundException(`${name} category not found`);
+
+    category.players.push(player);
+
+    await this.categoryRepository.update(
+      name,
+      category.description,
+      category.contests,
+      category.players,
+    );
+    return;
+  }
+
+  async remove(name: string): Promise<void> {
+    await this.categoryRepository.remove(name);
     return;
   }
 }

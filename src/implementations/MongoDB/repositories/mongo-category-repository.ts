@@ -1,6 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Category } from '../../../category/entities/category.entity';
+import { Player } from '../../../player/entities/player.entity';
+import { Category, Contest } from '../../../category/entities/category.entity';
 import { CategoryRepository } from '../../../category/interfaces/category-repository.interface';
 
 export class MongoCategoryRepository implements CategoryRepository {
@@ -19,18 +20,23 @@ export class MongoCategoryRepository implements CategoryRepository {
     return await this.playerModel.findOne({ email: email });
   }
   async update(
-    email: string,
     name: string,
-    phoneNumber: string,
+    description: string,
+    contests: Array<Contest>,
+    players: Array<Player>,
   ): Promise<void> {
     await this.playerModel.updateOne(
-      { email: email },
-      { name: name, phoneNumber: phoneNumber },
+      { name: name },
+      {
+        description: description,
+        contests: contests,
+        players: players,
+      },
     );
     return;
   }
   async remove(email: string): Promise<void> {
-    await this.playerModel.remove({ email: email });
+    await this.playerModel.deleteOne({ email: email });
     return;
   }
 }

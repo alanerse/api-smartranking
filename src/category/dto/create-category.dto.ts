@@ -1,4 +1,5 @@
 import { ArrayMinSize, IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { Contest } from '../entities/category.entity';
 
 export class CreateCategoryDTO {
   @IsString()
@@ -11,5 +12,5 @@ export class CreateCategoryDTO {
 
   @IsArray()
   @ArrayMinSize(1)
-  events: Array<Event>;
+  contests: Array<Contest>;
 }
