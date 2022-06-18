@@ -13,7 +13,7 @@ import {
 import { PlayerService } from './player.service';
 import { CreatePlayerDTO } from './dto/create-player.dto';
 import { UpdatePlayerDTO } from './dto/update-player.dto';
-import { FindPlayerParamsValidation } from './pipes/find-player-params-validation.pipe';
+import { FindPlayerParamsValidation } from '../common/pipes/find-player-params-validation.pipe';
 
 @Controller('player')
 export class PlayerController {

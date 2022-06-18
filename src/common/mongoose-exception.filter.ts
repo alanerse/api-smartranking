@@ -2,7 +2,7 @@ import { ExceptionFilter, Catch, ArgumentsHost } from '@nestjs/common';
 import { Response } from 'express';
 import { MongoError } from 'mongodb';
 
-@Catch(Error)
+@Catch(MongoError)
 export class MongooseExceptionFilter implements ExceptionFilter {
   catch(exception: MongoError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();

@@ -3,10 +3,11 @@ import { connect, Connection, Model, MongooseError } from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Player } from './entities/player.entity';
 import { PlayerService } from './player.service';
-import { PlayerSchema } from '../schemas/player.schema';
+import { PlayerSchema } from '../implementations/MongoDB/schemas/player.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { CreatePlayerDTOStub } from './dto/create-player.dto.stub';
-import { BadRequestException } from '@nestjs/common';
+import { PLAYER_REPOSITORY } from './interfaces/player-repository.interface';
+import { MongoPlayerRepository } from '../implementations/MongoDB/repositories/mongo-player-repository';
 
 describe('PlayerService', () => {
   let service: PlayerService;
@@ -22,8 +23,12 @@ describe('PlayerService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        PlayerService,
         { provide: getModelToken(Player.name), useValue: playerModel },
+        {
+          provide: PLAYER_REPOSITORY,
+          useClass: MongoPlayerRepository,
+        },
+        PlayerService,
       ],
     }).compile();
 
@@ -65,9 +70,17 @@ describe('PlayerService', () => {
       expect(createSpy).toBeCalledWith(stubPlayer);
     });
 
-    it('should trhow an error to create a new player', async () => {
-      const stub = CreatePlayerDTOStub();
+    it('should throw an error to create a new player with same email', async () => {
+      const { email, name, phoneNumber } = CreatePlayerDTOStub();
       const createSpy = jest.spyOn(playerModel, 'create');
+      const stubPlayer = Player.create({
+        email,
+        name,
+        phoneNumber,
+        ranking: '',
+        rankingPosition: 20,
+        urlPlayerPhoto: '',
+      });
       expect(createSpy).toThrow(MongooseError);
     });
   });

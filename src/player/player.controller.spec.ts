@@ -1,8 +1,4 @@
-import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import { connect, Connection, Model } from 'mongoose';
-import { PlayerSchema } from '../schemas/player.schema';
 import { CreatePlayerDTOStub } from './dto/create-player.dto.stub';
 import { UpdatePlayerDTOStub } from './dto/update-player.dto.stub';
 import { Player } from './entities/player.entity';
@@ -12,42 +8,28 @@ import { PlayerService } from './player.service';
 describe('PlayerController', () => {
   let controller: PlayerController;
   let service: PlayerService;
-  let mongod: MongoMemoryServer;
-  let mongoConnection: Connection;
-  let playerModel: Model<Player>;
 
   const mockedEmail = 'mocked@email.com';
 
   beforeAll(async () => {
-    mongod = await MongoMemoryServer.create();
-    const uri = mongod.getUri();
-    mongoConnection = (await connect(uri)).connection;
-    playerModel = mongoConnection.model(Player.name, PlayerSchema);
-
     const module: TestingModule = await Test.createTestingModule({
       controllers: [PlayerController],
       providers: [
-        PlayerService,
-        { provide: getModelToken(Player.name), useValue: playerModel },
+        {
+          provide: PlayerService,
+          useValue: {
+            create: jest.fn(),
+            findAll: jest.fn(),
+            findOne: jest.fn(),
+            update: jest.fn(),
+            remove: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     controller = module.get<PlayerController>(PlayerController);
     service = module.get<PlayerService>(PlayerService);
-  });
-
-  afterAll(async () => {
-    await mongoConnection.dropDatabase();
-    await mongoConnection.close();
-    await mongod.stop();
-  });
-
-  afterEach(async () => {
-    const collections = mongoConnection.collections;
-    for (const key in collections) {
-      const collection = collections[key];
-      await collection.deleteMany({});
-    }
   });
 
   it('should be defined', () => {
