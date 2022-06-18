@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { connect, Connection, Model, MongooseError } from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { Player } from './entities/player.entity';
-import { PlayerService } from './player.service';
-import { PlayerSchema } from '../implementations/MongoDB/schemas/player.schema';
+import { Player } from '../entities/player.entity';
+import { PlayerService } from '../player.service';
+import { PlayerSchema } from '../../implementations/MongoDB/schemas/player.schema';
 import { getModelToken } from '@nestjs/mongoose';
-import { CreatePlayerDTOStub } from './dto/create-player.dto.stub';
-import { PLAYER_REPOSITORY } from './interfaces/player-repository.interface';
-import { MongoPlayerRepository } from '../implementations/MongoDB/repositories/mongo-player-repository';
+import { CreatePlayerDTOStub } from '../dto/create-player.dto.stub';
+import { PLAYER_REPOSITORY } from '../interfaces/player-repository.interface';
+import { MongoPlayerRepository } from '../../implementations/MongoDB/repositories/mongo-player-repository';
 
 describe('PlayerService', () => {
   let service: PlayerService;

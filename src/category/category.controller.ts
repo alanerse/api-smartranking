@@ -6,40 +6,46 @@ import {
   Patch,
   Param,
   Delete,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
+import { ParamsValidation } from 'src/common/pipes/params-validation.pipe';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CreateCategoryDTO } from './dto/create-category.dto';
+import { UpdateCategoryDTO } from './dto/update-category.dto';
+import { Category } from './entities/category.entity';
 
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
-  create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoryService.create(createCategoryDto);
+  @UsePipes(ValidationPipe)
+  async create(@Body() createCategoryDto: CreateCategoryDTO): Promise<void> {
+    await this.categoryService.create(createCategoryDto);
+    return;
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<Category[]> {
     return this.categoryService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParamsValidation) id: string): Promise<Category> {
     return this.categoryService.findOne(+id);
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
-  ) {
+  async update(
+    @Param('id', ParamsValidation) id: string,
+    @Body() updateCategoryDto: UpdateCategoryDTO,
+  ): Promise<void> {
     return this.categoryService.update(+id, updateCategoryDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id', ParamsValidation) id: string): Promise<void> {
     return this.categoryService.remove(+id);
   }
 }

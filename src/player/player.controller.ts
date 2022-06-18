@@ -13,7 +13,7 @@ import {
 import { PlayerService } from './player.service';
 import { CreatePlayerDTO } from './dto/create-player.dto';
 import { UpdatePlayerDTO } from './dto/update-player.dto';
-import { FindPlayerParamsValidation } from '../common/pipes/find-player-params-validation.pipe';
+import { ParamsValidation } from '../common/pipes/params-validation.pipe';
 
 @Controller('player')
 export class PlayerController {
@@ -31,20 +31,20 @@ export class PlayerController {
   }
 
   @Get('/search')
-  async findOne(@Query('email', FindPlayerParamsValidation) email: string) {
+  async findOne(@Query('email', ParamsValidation) email: string) {
     return this.playerService.findOne(email);
   }
 
   @Patch(':email')
   async update(
-    @Param('email') email: string,
+    @Param('email', ParamsValidation) email: string,
     @Body() updatePlayerDto: UpdatePlayerDTO,
   ) {
     return await this.playerService.update(email, updatePlayerDto);
   }
 
   @Delete(':email')
-  async remove(@Param('email') email: string) {
+  async remove(@Param('email', ParamsValidation) email: string) {
     return await this.playerService.remove(email);
   }
 }

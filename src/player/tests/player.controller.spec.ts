@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreatePlayerDTOStub } from './dto/create-player.dto.stub';
-import { UpdatePlayerDTOStub } from './dto/update-player.dto.stub';
-import { Player } from './entities/player.entity';
-import { PlayerController } from './player.controller';
-import { PlayerService } from './player.service';
+import { CreatePlayerDTOStub } from '../dto/create-player.dto.stub';
+import { UpdatePlayerDTOStub } from '../dto/update-player.dto.stub';
+import { Player } from '../entities/player.entity';
+import { PlayerController } from '../player.controller';
+import { PlayerService } from '../player.service';
 
 describe('PlayerController', () => {
   let controller: PlayerController;

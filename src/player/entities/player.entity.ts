@@ -32,6 +32,8 @@ export class Player {
       rankingPosition,
     } = opts;
 
+    //Here we can do some valitadions before instantiate the obj;
+
     return new Player(
       email,
       name,
