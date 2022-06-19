@@ -15,7 +15,7 @@ import { CreatePlayerDTO } from './dto/create-player.dto';
 import { UpdatePlayerDTO } from './dto/update-player.dto';
 import { ParamsValidation } from '../common/pipes/params-validation.pipe';
 
-@Controller('player')
+@Controller('api/v1/player')
 export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
@@ -36,6 +36,7 @@ export class PlayerController {
   }
 
   @Patch(':email')
+  @UsePipes(ValidationPipe)
   async update(
     @Param('email', ParamsValidation) email: string,
     @Body() updatePlayerDto: UpdatePlayerDTO,

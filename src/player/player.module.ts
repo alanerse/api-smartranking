@@ -18,5 +18,6 @@ import { PLAYER_REPOSITORY } from './interfaces/player-repository.interface';
     },
     PlayerService,
   ],
+  exports: [PlayerService],
 })
 export class PlayerModule {}

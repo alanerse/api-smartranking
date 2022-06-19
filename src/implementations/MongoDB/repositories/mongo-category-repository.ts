@@ -6,21 +6,21 @@ import { CategoryRepository } from '../../../category/interfaces/category-reposi
 
 export class MongoCategoryRepository implements CategoryRepository {
   constructor(
-    @InjectModel('Category') private readonly playerModel: Model<Category>,
+    @InjectModel('Category') private readonly categoryModel: Model<Category>,
   ) {}
 
   async create(category: Category): Promise<void> {
-    await this.playerModel.create(category);
+    await this.categoryModel.create(category);
     return;
   }
   async findAll(page: number, limit: number): Promise<Category[]> {
-    return await this.playerModel
+    return await this.categoryModel
       .find({})
       .limit(limit)
       .skip((page - 1) * limit);
   }
-  async findOne(email: string): Promise<Category> {
-    return await this.playerModel.findOne({ email: email });
+  async findOne(name: string): Promise<Category> {
+    return await this.categoryModel.findOne({ name: name }).populate('players');
   }
   async update(
     name: string,
@@ -28,7 +28,7 @@ export class MongoCategoryRepository implements CategoryRepository {
     contests: Array<Contest>,
     players: Array<Player>,
   ): Promise<void> {
-    await this.playerModel.updateOne(
+    await this.categoryModel.updateOne(
       { name: name },
       {
         description: description,
@@ -38,8 +38,8 @@ export class MongoCategoryRepository implements CategoryRepository {
     );
     return;
   }
-  async remove(email: string): Promise<void> {
-    await this.playerModel.deleteOne({ email: email });
+  async remove(name: string): Promise<void> {
+    await this.categoryModel.deleteOne({ name: name });
     return;
   }
 }

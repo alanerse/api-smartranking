@@ -5,10 +5,12 @@ import { MongoCategoryRepository } from '../implementations/MongoDB/repositories
 import { CATEGORY_REPOSITORY } from './interfaces/category-repository.interface';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategorySchema } from '../implementations/MongoDB/schemas/category.schema';
+import { PlayerModule } from '../player/player.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Category', schema: CategorySchema }]),
+    PlayerModule,
   ],
   controllers: [CategoryController],
   providers: [

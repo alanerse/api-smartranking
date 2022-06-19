@@ -16,7 +16,7 @@ import { CreateCategoryDTO } from './dto/create-category.dto';
 import { UpdateCategoryDTO } from './dto/update-category.dto';
 import { Category } from './entities/category.entity';
 
-@Controller('category')
+@Controller('api/v1/category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
@@ -40,6 +40,7 @@ export class CategoryController {
   }
 
   @Patch(':name')
+  @UsePipes(ValidationPipe)
   async update(
     @Param('name', ParamsValidation) name: string,
     @Body() updateCategoryDto: UpdateCategoryDTO,
@@ -50,5 +51,13 @@ export class CategoryController {
   @Delete(':name')
   async remove(@Param('name', ParamsValidation) name: string): Promise<void> {
     return this.categoryService.remove(name);
+  }
+
+  @Post('/:categoryName/player/:playerEmail')
+  async addPlayer(
+    @Param('categoryName', ParamsValidation) categoryName: string,
+    @Param('playerEmail', ParamsValidation) playerEmail: string,
+  ) {
+    await this.categoryService.addPlayer(categoryName, playerEmail);
   }
 }

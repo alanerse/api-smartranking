@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Player } from '../player/entities/player.entity';
+import { PlayerService } from 'src/player/player.service';
 import { CreateCategoryDTO } from './dto/create-category.dto';
 import { UpdateCategoryDTO } from './dto/update-category.dto';
 import { Category, Contest } from './entities/category.entity';
@@ -18,6 +18,8 @@ export class CategoryService {
   constructor(
     @Inject(CATEGORY_REPOSITORY)
     private categoryRepository: CategoryRepository,
+    @Inject(PlayerService)
+    private playerService: PlayerService,
   ) {}
 
   async create(createCategoryDTO: CreateCategoryDTO): Promise<void> {
@@ -73,10 +75,11 @@ export class CategoryService {
     return;
   }
 
-  async addPlayer(name: string, player: Player): Promise<void> {
+  async addPlayer(name: string, playerEmail: string): Promise<void> {
     const category = await this.categoryRepository.findOne(name);
     if (!category) throw new NotFoundException(`${name} category not found`);
 
+    const player = await this.playerService.findOne(playerEmail);
     category.players.push(player);
 
     await this.categoryRepository.update(
