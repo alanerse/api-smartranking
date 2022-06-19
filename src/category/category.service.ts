@@ -80,7 +80,10 @@ export class CategoryService {
     if (!category) throw new NotFoundException(`${name} category not found`);
 
     const player = await this.playerService.findOne(playerEmail);
-    category.players.push(player);
+    if (category.players.some((p) => p.email === player.email))
+      throw new BadRequestException(
+        `${player.email} is already in this category`,
+      );
 
     await this.categoryRepository.update(
       name,
