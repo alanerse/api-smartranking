@@ -39,8 +39,8 @@ export class CategoryService {
     return;
   }
 
-  async findAll(): Promise<Category[]> {
-    return await this.categoryRepository.findAll();
+  async findAll(page: number): Promise<Category[]> {
+    return await this.categoryRepository.findAll(page ?? 1, 10);
   }
 
   async findOne(name: string): Promise<Category> {

@@ -8,6 +8,7 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { ParamsValidation } from 'src/common/pipes/params-validation.pipe';
 import { CategoryService } from './category.service';
@@ -27,8 +28,8 @@ export class CategoryController {
   }
 
   @Get()
-  async findAll(): Promise<Category[]> {
-    return this.categoryService.findAll();
+  async findAll(@Query('page') page: number): Promise<Category[]> {
+    return this.categoryService.findAll(page);
   }
 
   @Get(':name')

@@ -38,8 +38,8 @@ export class PlayerService {
     return;
   }
 
-  async findAll(): Promise<Player[]> {
-    return await this.playerRepository.findAll();
+  async findAll(page: number): Promise<Player[]> {
+    return await this.playerRepository.findAll(page ?? 1, 10);
   }
 
   async findOne(email: string): Promise<Player> {

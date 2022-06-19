@@ -12,8 +12,11 @@ export class MongoPlayerRepository implements PlayerRepository {
     await this.playerModel.create(player);
     return;
   }
-  async findAll(): Promise<Player[]> {
-    return await this.playerModel.find({});
+  async findAll(page: number, limit: number): Promise<Player[]> {
+    return await this.playerModel
+      .find({})
+      .limit(limit)
+      .skip((page - 1) * limit);
   }
   async findOne(email: string): Promise<Player> {
     return await this.playerModel.findOne({ email: email });

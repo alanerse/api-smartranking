@@ -26,12 +26,12 @@ export class PlayerController {
   }
 
   @Get()
-  async findAll() {
-    return this.playerService.findAll();
+  async findAll(@Query('page') page: number) {
+    return this.playerService.findAll(page);
   }
 
-  @Get('/search')
-  async findOne(@Query('email', ParamsValidation) email: string) {
+  @Get('/email/:email')
+  async findOne(@Param('email', ParamsValidation) email: string) {
     return this.playerService.findOne(email);
   }
 

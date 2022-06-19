@@ -13,8 +13,11 @@ export class MongoCategoryRepository implements CategoryRepository {
     await this.playerModel.create(category);
     return;
   }
-  async findAll(): Promise<Category[]> {
-    return await this.playerModel.find({});
+  async findAll(page: number, limit: number): Promise<Category[]> {
+    return await this.playerModel
+      .find({})
+      .limit(limit)
+      .skip((page - 1) * limit);
   }
   async findOne(email: string): Promise<Category> {
     return await this.playerModel.findOne({ email: email });
