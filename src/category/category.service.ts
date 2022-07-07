@@ -42,7 +42,7 @@ export class CategoryService {
   }
 
   async findAll(page: number): Promise<Category[]> {
-    return await this.categoryRepository.findAll(page ?? 1, 10);
+    return await this.categoryRepository.findAll(page ?? 1, 5);
   }
 
   async findOne(name: string): Promise<Category> {
@@ -95,6 +95,8 @@ export class CategoryService {
   }
 
   async remove(name: string): Promise<void> {
+    const category = await this.categoryRepository.findOne(name);
+    if (!category) throw new NotFoundException(`${name} not found`);
     await this.categoryRepository.remove(name);
     return;
   }

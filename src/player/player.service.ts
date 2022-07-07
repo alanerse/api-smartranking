@@ -39,7 +39,7 @@ export class PlayerService {
   }
 
   async findAll(page: number): Promise<Player[]> {
-    return await this.playerRepository.findAll(page ?? 1, 10);
+    return await this.playerRepository.findAll(page ?? 1, 5);
   }
 
   async findOne(email: string): Promise<Player> {
